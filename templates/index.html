@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Linked Lists Learning Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-dark.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1><i class="fas fa-link"></i> LinkedList Master</h1>
+            <div class="nav-stats">
+                <span id="user-score">Score: 0</span>
+                <span id="user-achievements">🏆 0</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
+                <button class="tab-btn" data-tab="tutorials"><i class="fas fa-book"></i> Tutorials</button>
+                <button class="tab-btn" data-tab="playground"><i class="fas fa-play"></i> Playground</button>
+                <button class="tab-btn" data-tab="quiz"><i class="fas fa-brain"></i> Quiz</button>
+                <button class="tab-btn" data-tab="practice"><i class="fas fa-code"></i> Practice</button>
+                <button class="tab-btn" data-tab="algorithms"><i class="fas fa-cogs"></i> Algorithms</button>
+                <button class="tab-btn" data-tab="leaderboard"><i class="fas fa-trophy"></i> Leaderboard</button>
+                <button class="tab-btn" data-tab="progress"><i class="fas fa-chart-line"></i> Progress</button>
+                <button class="tab-btn" data-tab="interview"><i class="fas fa-briefcase"></i> Interview Prep</button>
+                <button class="tab-btn" data-tab="performance"><i class="fas fa-tachometer-alt"></i> Performance</button>
+                <button class="tab-btn" data-tab="code-gen"><i class="fas fa-code"></i> Code Generator</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <h2>Welcome to LinkedList Master</h2>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3><i class="fas fa-graduation-cap"></i> Learning Progress</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="learning-progress"></div>
+                        </div>
+                        <p id="progress-text">0% Complete</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3><i class="fas fa-fire"></i> Current Streak</h3>
+                        <div class="streak-display">
+                            <span id="streak-days">0</span> days
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3><i class="fas fa-clock"></i> Time Spent</h3>
+                        <div class="time-display">
+                            <span id="time-spent">0</span> minutes
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3><i class="fas fa-star"></i> Achievements</h3>
+                        <div id="recent-achievements"></div>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="switchTab('tutorials')">Start Learning</button>
+                    <button class="action-btn" onclick="switchTab('playground')">Try Playground</button>
+                    <button class="action-btn" onclick="switchTab('quiz')">Take Quiz</button>
+                </div>
+            </div>
+
+            <!-- Tutorials Tab -->
+            <div id="tutorials" class="tab-content">
+                <h2>Interactive Tutorials</h2>
+                <div class="tutorial-selector">
+                    <select id="tutorial-select">
+                        <option value="singly">Singly Linked List</option>
+                        <option value="doubly">Doubly Linked List</option>
+                        <option value="circular">Circular Linked List</option>
+                        <option value="advanced">Advanced Operations</option>
+                    </select>
+                </div>
+                <div class="tutorial-content">
+                    <div id="tutorial-text"></div>
+                    <div class="tutorial-visualization" id="tutorial-viz"></div>
+                </div>
+            </div>
+
+            <!-- Playground Tab -->
+            <div id="playground" class="tab-content">
+                <h2>Interactive Playground</h2>
+                <div class="playground-controls">
+                    <select id="list-type">
+                        <option value="singly">Singly Linked List</option>
+                        <option value="doubly">Doubly Linked List</option>
+                        <option value="circular">Circular Linked List</option>
+                    </select>
+                    <input type="number" id="node-value" placeholder="Enter value" min="0" max="99">
+                    <button onclick="insertHead()">Insert Head</button>
+                    <button onclick="insertTail()">Insert Tail</button>
+                    <button onclick="deleteHead()">Delete Head</button>
+                    <button onclick="deleteTail()">Delete Tail</button>
+                    <button onclick="clearList()">Clear</button>
+                    <button onclick="animateTraversal()">Animate Traversal</button>
+                </div>
+                <div class="visualization-area">
+                    <canvas id="list-canvas" width="1000" height="400"></canvas>
+                </div>
+                <div class="operation-info">
+                    <div id="complexity-info">Time Complexity: O(1)</div>
+                    <div id="operation-log"></div>
+                </div>
+            </div>
+
+            <!-- Quiz Tab -->
+            <div id="quiz" class="tab-content">
+                <h2>Knowledge Quiz</h2>
+                <div class="quiz-container">
+                    <div class="quiz-header">
+                        <span id="question-counter">Question 1 of 12</span>
+                        <span id="quiz-timer">Time: 00:00</span>
+                    </div>
+                    <div class="question-container">
+                        <h3 id="question-text"></h3>
+                        <div id="question-options"></div>
+                    </div>
+                    <div class="quiz-controls">
+                        <button id="submit-answer" onclick="submitAnswer()">Submit Answer</button>
+                        <button id="next-question" onclick="nextQuestion()" style="display:none">Next Question</button>
+                        <button onclick="restartQuiz()">Restart Quiz</button>
+                    </div>
+                    <div id="quiz-feedback"></div>
+                </div>
+            </div>
+
+            <!-- Practice Tab -->
+            <div id="practice" class="tab-content">
+                <h2>Coding Practice</h2>
+                <div class="practice-selector">
+                    <select id="problem-select">
+                        <option value="0">Reverse Linked List</option>
+                        <option value="1">Detect Cycle</option>
+                        <option value="2">Merge Two Lists</option>
+                        <option value="3">Remove Nth Node</option>
+                        <option value="4">Find Middle</option>
+                        <option value="5">Palindrome Check</option>
+                        <option value="6">Intersection Point</option>
+                    </select>
+                    <div class="difficulty-badge" id="difficulty-badge">Easy</div>
+                </div>
+                <div class="practice-layout">
+                    <div class="problem-description">
+                        <h3 id="problem-title"></h3>
+                        <div id="problem-desc"></div>
+                        <div class="test-cases" id="test-cases"></div>
+                    </div>
+                    <div class="code-editor">
+                        <div class="editor-header">
+                            <span>Code Editor</span>
+                            <div class="editor-controls">
+                                <button onclick="runCode()">Run Code</button>
+                                <button onclick="submitSolution()">Submit</button>
+                                <button onclick="showHint()">Hint</button>
+                                <button onclick="showSolution()">Solution</button>
+                            </div>
+                        </div>
+                        <textarea id="code-editor" placeholder="Write your solution here..."></textarea>
+                        <div class="output-area">
+                            <h4>Output:</h4>
+                            <pre id="code-output"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Algorithms Tab -->
+            <div id="algorithms" class="tab-content">
+                <h2>Advanced Algorithms</h2>
+                <div class="algorithm-grid">
+                    <div class="algorithm-card" onclick="showAlgorithm('floyd')">
+                        <h3>Floyd's Cycle Detection</h3>
+                        <p>Detect cycles using two pointers</p>
+                    </div>
+                    <div class="algorithm-card" onclick="showAlgorithm('merge')">
+                        <h3>Merge Sort on Lists</h3>
+                        <p>Efficient sorting for linked lists</p>
+                    </div>
+                    <div class="algorithm-card" onclick="showAlgorithm('lru')">
+                        <h3>LRU Cache Implementation</h3>
+                        <p>Using doubly linked list + hashmap</p>
+                    </div>
+                    <div class="algorithm-card" onclick="showAlgorithm('skip')">
+                        <h3>Skip List</h3>
+                        <p>Probabilistic data structure</p>
+                    </div>
+                </div>
+                <div id="algorithm-detail" class="algorithm-detail"></div>
+            </div>
+
+            <!-- Leaderboard Tab -->
+            <div id="leaderboard" class="tab-content">
+                <h2>Global Leaderboard</h2>
+                <div class="leaderboard-container">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>User</th>
+                                <th>Score</th>
+                                <th>Achievements</th>
+                                <th>Problems Solved</th>
+                                <th>Best Quiz Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Progress Tab -->
+            <div id="progress" class="tab-content">
+                <h2>Your Progress</h2>
+                <div class="progress-overview">
+                    <div class="progress-stats">
+                        <div class="stat-card">
+                            <h3>Total Score</h3>
+                            <div class="stat-value" id="total-score">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Lessons Completed</h3>
+                            <div class="stat-value" id="lessons-completed">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Quiz Attempts</h3>
+                            <div class="stat-value" id="quiz-attempts">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Problems Solved</h3>
+                            <div class="stat-value" id="problems-solved">0</div>
+                        </div>
+                    </div>
+                    <div class="achievements-showcase">
+                        <h3>Achievements Unlocked</h3>
+                        <div id="achievements-grid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interview Prep Tab -->
+            <div id="interview" class="tab-content">
+                <h2>🎯 Interview Preparation</h2>
+                <div class="interview-sections">
+                    <div class="interview-section">
+                        <h3>📝 Common Questions</h3>
+                        <div class="question-categories">
+                            <button onclick="loadQuestions('basic')">Basic Concepts</button>
+                            <button onclick="loadQuestions('implementation')">Implementation</button>
+                            <button onclick="loadQuestions('advanced')">Advanced</button>
+                            <button onclick="generateMockInterview()">Mock Interview</button>
+                        </div>
+                        <div id="interview-questions"></div>
+                    </div>
+                    
+                    <div class="interview-section">
+                        <h3>🧩 Coding Patterns</h3>
+                        <p>Essential patterns for solving linked list problems:</p>
+                        <div id="coding-patterns"></div>
+                    </div>
+                    
+                    <div class="interview-section">
+                        <h3>⏱️ Time Complexity Quiz</h3>
+                        <p>Test your understanding of time complexities:</p>
+                        <div id="complexity-quiz"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Tab -->
+            <div id="performance" class="tab-content">
+                <h2>🚀 Performance Analysis</h2>
+                <div class="performance-dashboard">
+                    <div class="benchmark-section">
+                        <h3>Time Complexity Visualization</h3>
+                        <div class="chart-container">
+                            <canvas id="complexityChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-section">
+                        <h3>Data Structure Comparison</h3>
+                        <div class="comparison-grid">
+                            <div class="comparison-card">
+                                <h4>Array vs Linked List</h4>
+                                <div class="chart-container">
+                                    <canvas id="arrayVsLinkedChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="comparison-card">
+                                <h4>Memory Usage Analysis</h4>
+                                <div class="chart-container">
+                                    <canvas id="memoryChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="benchmark-controls">
+                        <button onclick="runBenchmark('insertion')">Benchmark Insertion</button>
+                        <button onclick="runBenchmark('deletion')">Benchmark Deletion</button>
+                        <button onclick="runBenchmark('search')">Benchmark Search</button>
+                        <button onclick="runBenchmark('all')">Run All Benchmarks</button>
+                    </div>
+                    
+                    <div class="results-section">
+                        <h3>Benchmark Results</h3>
+                        <div id="benchmark-results"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Generator Tab -->
+            <div id="code-gen" class="tab-content">
+                <h2>💻 Multi-Language Code Generator</h2>
+                <div class="code-generator">
+                    <div class="generator-controls">
+                        <div class="control-group">
+                            <label>Language:</label>
+                            <select id="language-select">
+                                <option value="Python">Python</option>
+                                <option value="Java">Java</option>
+                                <option value="C++">C++</option>
+                                <option value="JavaScript">JavaScript</option>
+                                <option value="C#">C#</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label>Type:</label>
+                            <select id="code-type-select">
+                                <option value="data_structure">Data Structure</option>
+                                <option value="algorithm">Algorithm</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group" id="algorithm-group" style="display:none;">
+                            <label>Algorithm:</label>
+                            <select id="algorithm-select">
+                                <option value="reverse_list">Reverse List</option>
+                                <option value="detect_cycle">Detect Cycle</option>
+                            </select>
+                        </div>
+                        
+                        <button onclick="generateCode()">Generate Code</button>
+                        <button onclick="downloadCode()">Download</button>
+                    </div>
+                    
+                    <div class="generated-code">
+                        <div class="code-header">
+                            <span id="code-title">Generated Code</span>
+                            <button onclick="copyCode()">Copy</button>
+                        </div>
+                        <pre><code id="generated-code-content">Select options and click Generate Code</code></pre>
+                    </div>
+                    
+                    <div class="language-comparison">
+                        <h3>Language Comparison</h3>
+                        <div id="language-info"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='animations.js') }}"></script>
+    <script src="{{ url_for('static', filename='interview-prep.js') }}"></script>
+    <script src="{{ url_for('static', filename='code-generator.js') }}"></script>
+</body>
+</html>

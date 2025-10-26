@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Analyzer - LinkedList Master</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="performance-container">
+        <h1>🚀 Performance Analysis Dashboard</h1>
+        
+        <div class="benchmark-section">
+            <h2>Time Complexity Visualization</h2>
+            <canvas id="complexityChart" width="800" height="400"></canvas>
+        </div>
+        
+        <div class="comparison-section">
+            <h2>Data Structure Comparison</h2>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Array vs Linked List</h3>
+                    <canvas id="arrayVsLinkedChart"></canvas>
+                </div>
+                <div class="comparison-card">
+                    <h3>Memory Usage Analysis</h3>
+                    <canvas id="memoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="benchmark-controls">
+            <button onclick="runBenchmark('insertion')">Benchmark Insertion</button>
+            <button onclick="runBenchmark('deletion')">Benchmark Deletion</button>
+            <button onclick="runBenchmark('search')">Benchmark Search</button>
+            <button onclick="runBenchmark('all')">Run All Benchmarks</button>
+        </div>
+        
+        <div class="results-section">
+            <h2>Benchmark Results</h2>
+            <div id="benchmark-results"></div>
+        </div>
+    </div>
+
+    <script>
+        // Performance analysis implementation
+        function runBenchmark(type) {
+            const results = simulateBenchmark(type);
+            displayResults(results);
+        }
+
+        function simulateBenchmark(type) {
+            // Simulate performance testing
+            const sizes = [100, 500, 1000, 5000, 10000];
+            const results = {
+                array: [],
+                linkedList: [],
+                doublyLinked: []
+            };
+
+            sizes.forEach(size => {
+                switch(type) {
+                    case 'insertion':
+                        results.array.push(size * 0.1); // O(n) for array insertion
+                        results.linkedList.push(1); // O(1) for head insertion
+                        results.doublyLinked.push(1.2); // Slightly more overhead
+                        break;
+                    case 'search':
+                        results.array.push(size * 0.5); // O(n) linear search
+                        results.linkedList.push(size * 0.8); // O(n) but slower
+                        results.doublyLinked.push(size * 0.9); // Slightly slower
+                        break;
+                }
+            });
+
+            return { sizes, results };
+        }
+
+        function displayResults(data) {
+            const resultsDiv = document.getElementById('benchmark-results');
+            resultsDiv.innerHTML = `
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Size</th>
+                            <th>Array (ms)</th>
+                            <th>Linked List (ms)</th>
+                            <th>Doubly Linked (ms)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.sizes.map((size, i) => `
+                            <tr>
+                                <td>${size}</td>
+                                <td>${data.results.array[i].toFixed(2)}</td>
+                                <td>${data.results.linkedList[i].toFixed(2)}</td>
+                                <td>${data.results.doublyLinked[i].toFixed(2)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Initialize charts
+        window.onload = function() {
+            initializeCharts();
+        };
+
+        function initializeCharts() {
+            // Complexity chart
+            const ctx1 = document.getElementById('complexityChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['10', '100', '1K', '10K', '100K'],
+                    datasets: [{
+                        label: 'O(1) - Constant',
+                        data: [1, 1, 1, 1, 1],
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)'
+                    }, {
+                        label: 'O(n) - Linear',
+                        data: [10, 100, 1000, 10000, 100000],
+                        borderColor: '#FF9800',
+                        backgroundColor: 'rgba(255, 152, 0, 0.1)'
+                    }, {
+                        label: 'O(n²) - Quadratic',
+                        data: [100, 10000, 1000000, 100000000, 10000000000],
+                        borderColor: '#F44336',
+                        backgroundColor: 'rgba(244, 67, 54, 0.1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            type: 'logarithmic',
+                            title: {
+                                display: true,
+                                text: 'Operations (log scale)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Input Size'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
