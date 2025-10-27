@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, jsonify, session
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import uuid
 
 app = Flask(__name__)
 app.secret_key = 'linked_list_learning_platform_2024'
+app.permanent_session_lifetime = timedelta(days=30)
 
 # Initialize user data storage
 USER_DATA_FILE = 'user_data.json'
@@ -24,6 +25,7 @@ def save_user_data(data):
 def index():
     if 'user_id' not in session:
         session['user_id'] = str(uuid.uuid4())
+    session.permanent = True
     return render_template('index.html')
 
 @app.route('/api/progress', methods=['GET', 'POST'])
@@ -60,7 +62,9 @@ def handle_progress():
             }
         
         user_progress = user_data[user_id]
-        user_progress['score'] += data.get('points', 0)
+        # Only add points if explicitly provided and greater than 0
+        if data.get('points', 0) > 0:
+            user_progress['score'] += data.get('points', 0)
         
         if data.get('achievement') and data['achievement'] not in user_progress['achievements']:
             user_progress['achievements'].append(data['achievement'])
@@ -115,6 +119,3 @@ def execute_code():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
-
-# For Vercel deployment
-app = app

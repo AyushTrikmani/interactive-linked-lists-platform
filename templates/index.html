@@ -11,7 +11,7 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <h1><i class="fas fa-link"></i> LinkedList Master</h1>
+            <h1><i class="fas fa-link"></i> LinkedList Master <span style="font-size: 0.6em; color: #4CAF50;">Pro</span></h1>
             <div class="nav-stats">
                 <span id="user-score">Score: 0</span>
                 <span id="user-achievements">🏆 0</span>
@@ -66,9 +66,30 @@
                     </div>
                 </div>
                 <div class="quick-actions">
-                    <button class="action-btn" onclick="switchTab('tutorials')">Start Learning</button>
-                    <button class="action-btn" onclick="switchTab('playground')">Try Playground</button>
-                    <button class="action-btn" onclick="switchTab('quiz')">Take Quiz</button>
+                    <button class="action-btn" onclick="switchTab('tutorials')">
+                        <i class="fas fa-play"></i> Start Learning
+                    </button>
+                    <button class="action-btn" onclick="switchTab('playground')">
+                        <i class="fas fa-code"></i> Try Playground
+                    </button>
+                    <button class="action-btn" onclick="switchTab('quiz')">
+                        <i class="fas fa-brain"></i> Take Quiz
+                    </button>
+                </div>
+                
+                <div class="feature-highlights" style="margin-top: 3rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div class="feature-card" style="background: rgba(76, 175, 80, 0.1); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #4CAF50;">
+                        <h4><i class="fas fa-eye"></i> Visual Learning</h4>
+                        <p>Interactive animations and real-time visualization</p>
+                    </div>
+                    <div class="feature-card" style="background: rgba(33, 150, 243, 0.1); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #2196F3;">
+                        <h4><i class="fas fa-trophy"></i> Gamified</h4>
+                        <p>Achievements, scoring, and progress tracking</p>
+                    </div>
+                    <div class="feature-card" style="background: rgba(255, 152, 0, 0.1); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #FF9800;">
+                        <h4><i class="fas fa-briefcase"></i> Interview Ready</h4>
+                        <p>Practice problems and mock interviews</p>
+                    </div>
                 </div>
             </div>
 
@@ -99,12 +120,24 @@
                         <option value="circular">Circular Linked List</option>
                     </select>
                     <input type="number" id="node-value" placeholder="Enter value" min="0" max="99">
-                    <button onclick="insertHead()">Insert Head</button>
-                    <button onclick="insertTail()">Insert Tail</button>
-                    <button onclick="deleteHead()">Delete Head</button>
-                    <button onclick="deleteTail()">Delete Tail</button>
-                    <button onclick="clearList()">Clear</button>
-                    <button onclick="animateTraversal()">Animate Traversal</button>
+                    <button onclick="insertHead()" title="Add node at beginning">
+                        <i class="fas fa-plus-circle"></i> Insert Head
+                    </button>
+                    <button onclick="insertTail()" title="Add node at end">
+                        <i class="fas fa-plus-square"></i> Insert Tail
+                    </button>
+                    <button onclick="deleteHead()" title="Remove first node">
+                        <i class="fas fa-minus-circle"></i> Delete Head
+                    </button>
+                    <button onclick="deleteTail()" title="Remove last node">
+                        <i class="fas fa-minus-square"></i> Delete Tail
+                    </button>
+                    <button onclick="clearList()" title="Remove all nodes">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                    <button onclick="animateTraversal()" title="Show traversal animation">
+                        <i class="fas fa-play"></i> Animate
+                    </button>
                 </div>
                 <div class="visualization-area">
                     <canvas id="list-canvas" width="1000" height="400"></canvas>
@@ -378,6 +411,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='particles.js') }}"></script>
+    <script src="{{ url_for('static', filename='sound-effects.js') }}"></script>
+    <script src="{{ url_for('static', filename='themes.js') }}"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="{{ url_for('static', filename='animations.js') }}"></script>
     <script src="{{ url_for('static', filename='interview-prep.js') }}"></script>

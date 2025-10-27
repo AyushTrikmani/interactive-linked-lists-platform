@@ -85,6 +85,7 @@ function insertHead() {
     const value = document.getElementById('node-value').value;
     if (!value) {
         alert('Please enter a value');
+        if (window.soundManager) window.soundManager.play('error');
         return;
     }
     
@@ -92,13 +93,15 @@ function insertHead() {
     document.getElementById('node-value').value = '';
     drawList();
     logOperation(`Inserted ${value} at head`);
-    updateProgress(5);
+    if (window.soundManager) window.soundManager.play('insert');
+    // updateProgress(5); // Removed automatic scoring
 }
 
 function insertTail() {
     const value = document.getElementById('node-value').value;
     if (!value) {
         alert('Please enter a value');
+        if (window.soundManager) window.soundManager.play('error');
         return;
     }
     
@@ -106,31 +109,36 @@ function insertTail() {
     document.getElementById('node-value').value = '';
     drawList();
     logOperation(`Inserted ${value} at tail`);
-    updateProgress(5);
+    if (window.soundManager) window.soundManager.play('insert');
+    // updateProgress(5); // Removed automatic scoring
 }
 
 function deleteHead() {
     if (currentList.length === 0) {
         alert('List is empty');
+        if (window.soundManager) window.soundManager.play('error');
         return;
     }
     
     const deleted = currentList.shift();
     drawList();
     logOperation(`Deleted ${deleted} from head`);
-    updateProgress(5);
+    if (window.soundManager) window.soundManager.play('delete');
+    // updateProgress(5); // Removed automatic scoring
 }
 
 function deleteTail() {
     if (currentList.length === 0) {
         alert('List is empty');
+        if (window.soundManager) window.soundManager.play('error');
         return;
     }
     
     const deleted = currentList.pop();
     drawList();
     logOperation(`Deleted ${deleted} from tail`);
-    updateProgress(5);
+    if (window.soundManager) window.soundManager.play('delete');
+    // updateProgress(5); // Removed automatic scoring
 }
 
 function clearList() {
@@ -397,7 +405,10 @@ function submitAnswer() {
     
     if (isCorrect) {
         quizScore++;
-        updateProgress(10);
+        updateProgress(10); // Only award points for correct answers
+        if (window.soundManager) window.soundManager.play('correct');
+    } else {
+        if (window.soundManager) window.soundManager.play('incorrect');
     }
     
     const feedback = document.getElementById('quiz-feedback');
@@ -443,8 +454,10 @@ function showQuizResults() {
     
     if (achievement) {
         updateProgress(50, achievement);
+        if (window.soundManager) window.soundManager.play('achievement');
     }
     
+    // Only record quiz score, don't add extra points
     updateProgress(0, null, { quiz_score: percentage });
     
     alert(`Quiz Completed!\n\nScore: ${quizScore}/${quizQuestions.length} (${percentage.toFixed(1)}%)\n${achievement ? `Achievement: ${achievement}!` : ''}`);
@@ -581,15 +594,17 @@ function runCode() {
     .then(response => response.json())
     .then(data => {
         document.getElementById('code-output').textContent = data.output;
-        if (data.success) {
-            updateProgress(10);
-        }
+        // Removed automatic scoring on code run
+        // if (data.success) {
+        //     updateProgress(10);
+        // }
     });
 }
 
 function submitSolution() {
     const problemIndex = document.getElementById('problem-select').value;
-    updateProgress(25, null, { problem_solved: window.practiceProblems[problemIndex].title });
+    // Only update progress when user actually solves the problem
+    // updateProgress(25, null, { problem_solved: window.practiceProblems[problemIndex].title });
     alert('Solution submitted successfully!');
 }
 
@@ -598,7 +613,7 @@ function showHint() {
 }
 
 function showSolution() {
-    updateProgress(0, 'Solution Seeker');
+    // updateProgress(0, 'Solution Seeker'); // Removed automatic achievement
     alert('Solution will be shown in a separate window. Keep practicing!');
 }
 
@@ -1495,7 +1510,7 @@ class SkipList:
     
     const tutorial = tutorials[type];
     document.getElementById('tutorial-text').innerHTML = tutorial.content;
-    updateProgress(5, null, { lesson: tutorial.title });
+    // updateProgress(5, null, { lesson: tutorial.title }); // Removed automatic scoring
     
     // Add syntax highlighting to code blocks
     if (window.Prism) {
@@ -1629,7 +1644,7 @@ function showAlgorithm(algorithmType) {
     
     const algorithm = algorithms[algorithmType];
     document.getElementById('algorithm-detail').innerHTML = algorithm.content;
-    updateProgress(10, 'Algorithm Explorer');
+    // updateProgress(10, 'Algorithm Explorer'); // Removed automatic scoring
 }
 
 // Progress and User Management
@@ -1715,6 +1730,9 @@ function updateAchievementsDisplay() {
 }
 
 function showAchievement(achievement) {
+    // Play achievement sound
+    if (window.soundManager) window.soundManager.play('achievement');
+    
     // Create achievement notification
     const notification = document.createElement('div');
     notification.className = 'achievement-notification';
